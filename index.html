@@ -41,9 +41,18 @@ button:hover { background: #1b5e20; }
 }
 
 .card {
-    width: 140px;
-    aspect-ratio: 1 / 1;
-    display: flex;
+    width: 140px;              /* choose size */
+    aspect-ratio: 1 / 1;       /* makes card square */
+
+    background: white;
+    padding: 10px;
+    margin: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: 0.3s;
+
+    display: flex;             /* center image inside */
     justify-content: center;
     align-items: center;
 }
@@ -51,7 +60,7 @@ button:hover { background: #1b5e20; }
 .card:hover { transform: scale(1.03); }
 
 .card img {
-    width: 100px;
+    width: 80px;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: 8px;
@@ -231,6 +240,7 @@ function checkMatch() {
 </body>
 
 </html>
+
 
 
 
