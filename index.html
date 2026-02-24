@@ -152,22 +152,24 @@ let score = 0;
 let selectedImage = null;
 let selectedDesc = null;
 
-/* ⭐ MENYIMPAN DATA YANG SUDAH DIPAKAI PER MODE */
-let usedWords = {
-    easy: new Set(),
-    medium: new Set(),
-    hard: new Set()
-};
+/* ⭐ BANK GLOBAL GAMBAR YANG SUDAH DIGUNAKAN */
+let usedWordsGlobal = new Set();
 
 function shuffle(array) {
     return array.sort(() => Math.random() - 0.5);
 }
 
-function resetGame() {
+function resetGame(fullReset = false) {
+
     document.getElementById("images").innerHTML = "";
     document.getElementById("descriptions").innerHTML = "";
     document.getElementById("score").textContent = 0;
     score = 0;
+
+    /* ⭐ jika reset total, kosongkan bank global */
+    if(fullReset){
+        usedWordsGlobal.clear();
+    }
 }
 
 function startLevel(level) {
@@ -178,19 +180,19 @@ function startLevel(level) {
     if(level === "medium") amount = 10;
     if(level === "hard") amount = 15;
 
-    /* ⭐ AMBIL DATA YANG BELUM PERNAH DIPAKAI */
-    let available = fullData.filter(item => !usedWords[level].has(item.word));
+    /* ⭐ ambil data yang belum pernah muncul di mode mana pun */
+    let available = fullData.filter(item => !usedWordsGlobal.has(item.word));
 
-    /* ⭐ JIKA HABIS, RESET LIST MODE TERSEBUT */
+    /* ⭐ jika gambar tersisa kurang dari kebutuhan → reset bank global */
     if(available.length < amount){
-        usedWords[level].clear();
+        usedWordsGlobal.clear();
         available = [...fullData];
     }
 
     const levelData = shuffle(available).slice(0, amount);
 
-    /* ⭐ TANDAI SEBAGAI SUDAH DIGUNAKAN */
-    levelData.forEach(item => usedWords[level].add(item.word));
+    /* ⭐ tandai sebagai sudah dipakai global */
+    levelData.forEach(item => usedWordsGlobal.add(item.word));
 
     createGame(levelData);
 }
@@ -257,11 +259,17 @@ function checkMatch() {
     }
 }
 
+/* ⭐ tombol reset sekarang reset total */
+function resetGameButton(){
+    resetGame(true);
+}
+
 </script>
 
 </body>
 
 </html>
+
 
 
 
