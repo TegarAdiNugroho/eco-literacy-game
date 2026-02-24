@@ -148,6 +148,8 @@ const fullData = [
 {word:"GREENHOUSE", desc:"Glass building for plants."}
 ];
 
+let matchedPairs = 0;
+let totalPairs = 0;
 let score = 0;
 let selectedImage = null;
 let selectedDesc = null;
@@ -198,7 +200,10 @@ function startLevel(level) {
 }
 
 function createGame(data) {
-
+    
+    totalPairs = data.length;
+    matchedPairs = 0;
+    
     const imageContainer = document.getElementById("images");
     const descContainer = document.getElementById("descriptions");
 
@@ -250,7 +255,14 @@ function checkMatch() {
             selectedImage.classList.add("correct");
             selectedDesc.classList.add("correct");
             score += 10;
-            document.getElementById("score").textContent = score;
+matchedPairs++;
+
+document.getElementById("score").textContent = score;
+
+/* cek apakah game selesai */
+if(matchedPairs === totalPairs){
+    setTimeout(showFinalScore, 400);
+}
         }
         selectedImage.classList.remove("selected");
         selectedDesc.classList.remove("selected");
@@ -259,9 +271,22 @@ function checkMatch() {
     }
 }
 
-/* ⭐ tombol reset sekarang reset total */
-function resetGameButton(){
-    resetGame(true);
+function showFinalScore(){
+
+    let message = "🎉 Hebat! Kamu menyelesaikan level ini!\n\n";
+    message += "Skor akhir kamu: " + score + "\n\n";
+
+    if(score >= totalPairs*10){
+        message += "🌟 Perfect! Semua benar!";
+    }else if(score >= totalPairs*7){
+        message += "👍 Bagus sekali!";
+    }else{
+        message += "💪 Lumayan, coba lagi untuk skor lebih tinggi!";
+    }
+
+    if(confirm(message + "\n\nMain lagi?")){
+        resetGame(true);
+    }
 }
 
 </script>
@@ -269,6 +294,7 @@ function resetGameButton(){
 </body>
 
 </html>
+
 
 
 
