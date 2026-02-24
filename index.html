@@ -30,14 +30,18 @@ button {
 button:hover { background: #1b5e20; }
 
 .container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .column {
-    width: 45%;
-    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .card {
@@ -240,6 +244,7 @@ function checkMatch() {
 </body>
 
 </html>
+
 
 
 
