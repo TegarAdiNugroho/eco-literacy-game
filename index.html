@@ -249,7 +249,7 @@ function checkMatch() {
         if (selectedImage.dataset.word === selectedDesc.dataset.word) {
             selectedImage.classList.add("correct");
             selectedDesc.classList.add("correct");
-            score++;
+            score += 10;
             document.getElementById("score").textContent = score;
         }
         selectedImage.classList.remove("selected");
@@ -269,6 +269,7 @@ function resetGameButton(){
 </body>
 
 </html>
+
 
 
 
