@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="UTF-8">
+<title>Eco Literacy Matching Game</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #a8edea, #fed6e3);
+    text-align: center;
+    margin: 0;
+}
+
+h1 { margin-top: 20px; }
+
+.controls { margin: 15px; }
+
+button {
+    padding: 8px 15px;
+    margin: 5px;
+    border-radius: 8px;
+    border: none;
+    background: #2e7d32;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover { background: #1b5e20; }
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.column {
+    width: 45%;
+    min-width: 320px;
+}
+
+.card {
+    background: white;
+    padding: 10px;
+    margin: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: 0.3s;
+}
+
+.card:hover { transform: scale(1.03); }
+
+.card img {
+    width: 100%;
+    height: 140px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.selected { background: #ffe082; }
+.correct { background: #81c784; pointer-events: none; }
+
+.score {
+    font-size: 20px;
+    margin: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🌎 Eco Literacy Image Matching Game 🌎</h1>
+<h2> ⭐ Oleh Rakha Dwi & Tegar Adi ⭐</h2>
+
+<div class="controls">
+    <button onclick="startLevel('easy')">Easy (5)</button>
+    <button onclick="startLevel('medium')">Medium (10)</button>
+    <button onclick="startLevel('hard')">Hard (20)</button>
+    <button onclick="resetGame()">Reset</button>
+</div>
+
+<div class="score">Score: <span id="score">0</span></div>
+
+<div class="container">
+    <div class="column" id="images"></div>
+    <div class="column" id="descriptions"></div>
+</div>
+
+<script>
+
+const fullData = [
+{word:"MOUNTAIN", desc:"A natural pyramid rising high into the sky."},
+{word:"STAR", desc:"A shining object in the sky that looks small."},
+{word:"OCEAN", desc:"A giant body of salt water covering Earth."},
+{word:"EARTH", desc:"The planet full of life."},
+{word:"TREE", desc:"One of the main producers of oxygen."},
+{word:"ECLIPSE", desc:"When the moon blocks sunlight."},
+{word:"ISLAND", desc:"Land surrounded by water."},
+{word:"SPACE", desc:"Home of planets and stars."},
+{word:"MELT", desc:"Ice turning into water."},
+{word:"BOIL", desc:"Water heated until bubbling."},
+{word:"CLIFF", desc:"A tall and steep rock wall."},
+{word:"SNOW", desc:"Ice crystals falling from sky."},
+{word:"WATERFALL", desc:"Water flowing from high place."},
+{word:"CAVE", desc:"Dark underground place."},
+{word:"ROCK", desc:"Hard natural object."},
+{word:"LAKE", desc:"Large water surrounded by land."},
+{word:"CLOUD", desc:"White object floating in sky."},
+{word:"SUN", desc:"Bright object shining every morning."},
+{word:"STORM", desc:"Strong wind and rain together."},
+{word:"RAIN", desc:"Water falling from clouds."},
+{word:"DESERT", desc:"Very hot and dry place."},
+{word:"WAVE", desc:"Moving ocean water."},
+{word:"POND", desc:"Small body of water."},
+{word:"FLOOD", desc:"Too much water covering land."},
+{word:"ROOT", desc:"Plant part under soil."},
+{word:"STEM", desc:"Main body of plant."},
+{word:"LEAF", desc:"Plant part that makes food."},
+{word:"BRANCH", desc:"Arm of a tree."},
+{word:"RECYCLE", desc:"Using materials again."},
+{word:"GLACIER", desc:"Huge moving ice on land."},
+{word:"ICEBERG", desc:"Floating ice in ocean."},
+{word:"FOG", desc:"Thick mist blocking view."},
+{word:"SEED", desc:"Beginning of plant."},
+{word:"LANDSLIDE", desc:"Soil falling from high land."},
+{word:"LIGHTNING", desc:"Bright flash in storm."},
+{word:"CORAL REEF", desc:"Colorful sea life area."},
+{word:"POLLUTION", desc:"Dirty air or water."},
+{word:"FOREST", desc:"Area with many trees."},
+{word:"VALLEY", desc:"Low land between hills."},
+{word:"PENINSULA", desc:"Land jutting into sea."},
+{word:"SOLAR PANEL", desc:"Tool capturing sun energy."},
+{word:"SWAMP", desc:"Wet muddy land."},
+{word:"COMPOST", desc:"Natural waste into soil."},
+{word:"GREENHOUSE", desc:"Glass building for plants."}
+];
+
+let score = 0;
+let selectedImage = null;
+let selectedDesc = null;
+
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+function resetGame() {
+    document.getElementById("images").innerHTML = "";
+    document.getElementById("descriptions").innerHTML = "";
+    document.getElementById("score").textContent = 0;
+    score = 0;
+}
+
+function startLevel(level) {
+
+    resetGame();
+
+    let amount = 5;
+    if(level === "medium") amount = 10;
+    if(level === "hard") amount = 20;
+
+    const levelData = shuffle([...fullData]).slice(0, amount);
+    createGame(levelData);
+}
+
+function createGame(data) {
+
+    const imageContainer = document.getElementById("images");
+    const descContainer = document.getElementById("descriptions");
+
+    shuffle(data).forEach(item => {
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const img = document.createElement("img");
+
+        // IMPORTANT: your images folder must be named "images"
+        img.src = "images/" + item.word + ".png";
+
+        card.appendChild(img);
+        card.onclick = () => selectImage(card, item.word);
+
+        imageContainer.appendChild(card);
+    });
+
+    shuffle(data).forEach(item => {
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.textContent = item.desc;
+
+        card.onclick = () => selectDesc(card, item.word);
+
+        descContainer.appendChild(card);
+    });
+}
+
+function selectImage(card, word) {
+    if (selectedImage) selectedImage.classList.remove("selected");
+    selectedImage = card;
+    selectedImage.dataset.word = word;
+    selectedImage.classList.add("selected");
+    checkMatch();
+}
+
+function selectDesc(card, word) {
+    if (selectedDesc) selectedDesc.classList.remove("selected");
+    selectedDesc = card;
+    selectedDesc.dataset.word = word;
+    selectedDesc.classList.add("selected");
+    checkMatch();
+}
+
+function checkMatch() {
+    if (selectedImage && selectedDesc) {
+        if (selectedImage.dataset.word === selectedDesc.dataset.word) {
+            selectedImage.classList.add("correct");
+            selectedDesc.classList.add("correct");
+            score++;
+            document.getElementById("score").textContent = score;
+        }
+        selectedImage.classList.remove("selected");
+        selectedDesc.classList.remove("selected");
+        selectedImage = null;
+        selectedDesc = null;
+    }
+}
+
+</script>
+
+</body>
+</html>
